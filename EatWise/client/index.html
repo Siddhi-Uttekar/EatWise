@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍎 Food Safety Analyzer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <div class="max-w-4xl mx-auto p-6">
+        <!-- Header Section -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                🍎 Food Safety Analyzer
+            </h1>
+            <p class="text-gray-600">
+                Upload food label to analyze ingredient safety
+            </p>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">📷 Upload Food Label</h2>
+
+            <!-- File Upload Area -->
+            <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                <input type="file" accept="image/*" id="fileInput" class="hidden">
+                <label for="fileInput" class="cursor-pointer">
+                    <div class="text-4xl mb-2">📤</div>
+                    <p class="text-gray-700">Click to upload image</p>
+                </label>
+            </div>
+
+            <!-- Image Preview -->
+            <div id="preview" class="hidden mt-4">
+                <img id="previewImg" class="max-w-full h-48 object-contain mx-auto rounded">
+                <button id="analyzeBtn" class="w-full mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+                    🔍 Analyze Ingredients
+                </button>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loading" class="hidden mt-4 text-center text-blue-600">
+                <div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                <span class="ml-2">Processing...</span>
+            </div>
+
+            <!-- Error Display -->
+            <div id="error" class="hidden mt-4 p-3 bg-red-50 border border-red-200 rounded text-red-800"></div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results" class="hidden space-y-6">
+            <!-- Results will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

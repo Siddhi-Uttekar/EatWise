@@ -1,12 +1,12 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import './index.css'
-import App, { Home } from './App.jsx'
-import Login from './components/Login.jsx'
-import Register from './components/Register.jsx'
-import ProtectedRoute from './components/ProtectedRoute.jsx'
-import History from './components/History.jsx'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import "./index.css";
+import App, { Home } from "./App.jsx";
+import Login from "./components/Login.jsx";
+import Register from "./components/Register.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import History from "./components/History.jsx";
 
 const router = createBrowserRouter([
   {
@@ -37,8 +37,8 @@ const router = createBrowserRouter([
   },
 ]);
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById("root")).render(
   <StrictMode>
     <RouterProvider router={router} />
-  </StrictMode>,
-)
+  </StrictMode>
+);

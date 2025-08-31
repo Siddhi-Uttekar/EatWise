@@ -10,7 +10,10 @@
       "Read(C:\\Users\\uttek\\Desktop\\Github\\EatWise\\EatWise\\server/**)",
       "Read(C:\\Users\\uttek\\Desktop\\Github\\EatWise\\EatWise\\server\\utils/**)",
       "Bash(node:*)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(npx shadcn-ui@latest init)",
+      "Bash(npx shadcn@latest init)",
+      "Bash(npx shadcn@latest add:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { extractText, analyzeIngredients } from "./modules/api.js";
-import { ResultCard } from "./components/ResultCard.jsx";
+import ResultCard from "./components/ResultCard.jsx";
 
 
 // This will be the component for the main page

@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-<<<<<<< HEAD
     "baseUrl": ".",
     "paths": {
       "@/*": [
@@ -12,10 +11,3 @@
     "node_modules"
   ]
 }
-=======
-    "paths": {
-      "@/*": ["./*"]
-    }
-  }
-}
->>>>>>> 8e1b3a6b4be7f902ad2a90107f6a72338a4a5527

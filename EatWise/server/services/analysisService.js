@@ -1,5 +1,6 @@
 import { generateText } from "ai";
 import { groq } from "@ai-sdk/groq";
+import pool from "../utils/db.js";
 
 // AI prompt template for ingredient analysis
 const ANALYSIS_PROMPT = (ingredients) => `
@@ -30,7 +31,7 @@ Only return valid JSON. Do not include any explanation or text outside the JSON.
 Focus on harmful additives, preservatives, allergens, and health risks.
 `;
 
-export async function analyzeIngredients(text) {
+export async function analyzeIngredients(text, userId, imagePath) {
   const cleanText = text.replace(/\s+/g, " ").trim();
 
   if (cleanText.length < 5) {
@@ -48,7 +49,14 @@ export async function analyzeIngredients(text) {
 
     console.log("AI raw response:", result.text); // ✅ Log AI response
 
-    return parseAnalysis(result.text);
+    const analysis = parseAnalysis(result.text);
+
+    await pool.query(
+      "INSERT INTO analysis_reports (user_id, report_data, image_path) VALUES ($1, $2, $3)",
+      [userId, JSON.stringify(analysis), imagePath]
+    );
+
+    return analysis;
   } catch (error) {
     console.error("Analysis failed:", error);
     return createFallbackAnalysis();
@@ -56,23 +64,35 @@ export async function analyzeIngredients(text) {
 }
 
 function parseAnalysis(text) {
+  let cleanedJson = "";
   try {
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
-      const cleaned = jsonMatch[0]
-        .replace(/(\r\n|\n|\r)/gm, "") // remove line breaks
-        .replace(/([a-zA-Z0-9_]+)\s*:/g, '"$1":') // ensure keys are quoted
-        .replace(/,\s*}/g, '}') // remove trailing commas
+      cleanedJson = jsonMatch[0]
+        .replace(/(\r\n|\n|\r)/gm, "")
+        .replace(/([a-zA-Z0-9_]+)\s*:/g, '"$1":')
+        .replace(/,\s*}/g, '}')
         .replace(/,\s*]/g, ']');
 
-      return JSON.parse(cleaned);
+      console.log("Attempting to parse cleaned JSON:", cleanedJson);
+      return JSON.parse(cleanedJson);
     }
   } catch (error) {
-    console.error("Parse error:", error);
+    console.error("Failed to parse AI response JSON:", error.message);
+    console.error("Problematic JSON string:", cleanedJson);
   }
 
+  console.log("Returning fallback analysis due to parsing error.");
   return createFallbackAnalysis();
 }
+
+export const getAnalysisHistory = async (userId) => {
+  const result = await pool.query(
+    "SELECT * FROM analysis_reports WHERE user_id = $1 ORDER BY created_at DESC",
+    [userId]
+  );
+  return result.rows;
+};
 
 function createFallbackAnalysis() {
   return {
@@ -98,3 +118,4 @@ function createFallbackAnalysis() {
     ]
   };
 }
+

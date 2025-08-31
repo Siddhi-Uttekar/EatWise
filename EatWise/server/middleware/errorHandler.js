@@ -2,7 +2,8 @@ export function errorHandler(error, req, res, next) {
   // Log error for debugging
 
 
-  console.error("Server Error:", error.message)
+  console.error("Server Error:", error.message);
+  console.error(error.stack);
 
   // Handle specific error types
   if (error.code === "LIMIT_FILE_SIZE") {

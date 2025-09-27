@@ -38,7 +38,7 @@ Users can upload a **food label image**, the system extracts the text using **OC
 ### **1. Clone the Repository**
 
 ```bash
-git clone https://github.com/your-username/eatwise.git
+git clone https://github.com/Siddhi-Uttekar/EatWise.git
 cd eatwise
 ```
 

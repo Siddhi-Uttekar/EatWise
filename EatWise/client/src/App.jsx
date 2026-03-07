@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import {
   Upload,
@@ -28,10 +27,10 @@ import {
 // Enhanced Home component with shadcn/ui
 export function Home() {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [previewURL, setPreviewURL] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [previewURL, setPreviewURL] = useState(""); // you can see that img after uploading
+  const [loading, setLoading] = useState(false); // during analysis
   const [error, setError] = useState("");
-  const [analysisResults, setAnalysisResults] = useState(null);
+  const [analysisResults, setAnalysisResults] = useState(null); //stores results from api
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -239,7 +238,7 @@ export function Home() {
   );
 }
 
-// Enhanced App layout component with shadcn/ui
+
 export default function App() {
   const location = useLocation();
   const navigate = useNavigate();

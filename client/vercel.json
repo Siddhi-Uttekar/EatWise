@@ -1,0 +1,5 @@
+{
+  "env": {
+    "VITE_API_BASE": "https://eatwise-1-5a8a.onrender.com"
+  }
+}

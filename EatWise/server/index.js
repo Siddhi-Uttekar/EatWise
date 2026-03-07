@@ -22,6 +22,9 @@ app.use(cors()); // Enable cross-origin requests
 app.use(express.json({ limit: "10mb" })); // Parse JSON bodies up to 10MB
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
+// Serve static files from the built frontend
+app.use(express.static(path.join(__dirname, "../client/dist")));
+
 // Route handlers
 app.use("/api/ocr", ocrRoutes)           // OCR-related endpoints
 app.use("/api/analysis", analysisRoutes);  // Analysis-related endpoints
@@ -35,12 +38,15 @@ app.get("/api/health", (req, res) => {
   })
 })
 
+// Catch-all handler: send back index.html for any non-API routes (for SPA routing)
+app.get("*", (req, res) => {
+  if (!req.path.startsWith("/api")) {
+    res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+  }
+})
+
 // Error handling middleware (must be last)
 app.use(errorHandler)
-
-app.get("/", (req, res) => {
-  res.send("Welcome to EatWise API Server");
-});
 
 // Start server
 app.listen(PORT, () => {

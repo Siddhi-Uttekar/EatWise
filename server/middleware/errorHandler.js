@@ -1,4 +1,4 @@
-export function errorHandler(error, req, res, next) {
+﻿export function errorHandler(error, req, res, next) {
   // Log error for debugging
 
 

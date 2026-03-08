@@ -45,7 +45,7 @@ export default function Register() {
             Create an Account
           </CardTitle>
           <CardDescription className="text-lg text-gray-600 pt-2">
-            Join FoodSafe to start analyzing your food labels.
+            Join EatWise to start analyzing your food labels.
           </CardDescription>
         </CardHeader>
         <CardContent>

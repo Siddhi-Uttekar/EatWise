@@ -2,6 +2,7 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
 import ocrRoutes from "./routes/ocr.js";
 import analysisRoutes from "./routes/analysis.js";
@@ -17,6 +18,13 @@ const __dirname = path.dirname(__filename);
 
 const app = express()
 const PORT = process.env.PORT || 5000
+
+// Log environment variables status
+console.log("🔧 Environment variables loaded:");
+console.log("  - DATABASE_URL:", !!process.env.DATABASE_URL);
+console.log("  - JWT_SECRET:", !!process.env.JWT_SECRET);
+console.log("  - GROQ_API_KEY:", !!process.env.GROQ_API_KEY);
+console.log("  - PORT:", process.env.PORT || "5000 (default)");
 
 // Initialize database tables
 const initializeDatabase = async () => {
@@ -65,7 +73,22 @@ try {
 // Middleware setup
 app.use(cors()); // Enable cross-origin requests
 app.use(express.json({ limit: "10mb" })); // Parse JSON bodies up to 10MB
-app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
+
+// Ensure public directories exist
+const publicDir = path.join(__dirname, "public");
+const uploadsDir = path.join(publicDir, "uploads");
+
+if (!fs.existsSync(publicDir)) {
+  fs.mkdirSync(publicDir, { recursive: true });
+  console.log("✓ Created public directory");
+}
+
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+  console.log("✓ Created uploads directory");
+}
+
+app.use("/uploads", express.static(uploadsDir));
 
 // Route handlers
 app.use("/api/ocr", ocrRoutes)           // OCR-related endpoints

@@ -42,11 +42,14 @@ export async function analyzeIngredients(text, userId, imagePath) {
 
   try {
     console.log("📝 Analyzing ingredients for user:", userId);
+    console.log("🔑 GROQ_API_KEY present:", !!process.env.GROQ_API_KEY);
 
     if (!process.env.GROQ_API_KEY) {
+      console.error("❌ GROQ_API_KEY is missing from environment variables");
       throw new Error("GROQ_API_KEY is not configured");
     }
 
+    console.log("🤖 Calling Groq AI...");
     const result = await generateText({
       model: groq("llama-3.1-8b-instant"),
       messages: [{

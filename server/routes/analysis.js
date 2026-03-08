@@ -1,16 +1,25 @@
 ﻿import express from "express";
 import multer from "multer";
 import path from "path";
+import fs from "fs";
 import { analyzeIngredients, getAnalysisHistory } from "../services/analysisService.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
 // --- Multer setup for file uploads ---
+const uploadDir = "public/uploads";
+
+// Ensure upload directory exists
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+  console.log("✓ Created uploads directory:", uploadDir);
+}
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     // Save uploads to the 'public/uploads' directory
-    cb(null, "public/uploads/");
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
     // Create a unique filename to prevent overwrites
@@ -30,7 +39,8 @@ router.post("/analyze", protect, upload.single("image"), async (req, res, next) 
 
     console.log("📥 Analysis request from user:", req.userId);
     console.log("📄 Text length:", text?.length || 0);
-    console.log("🖼️ Image uploaded:", !!imagePath);
+    console.log("🖼️ Image uploaded:", !!req.file);
+    console.log("🖼️ Image path:", imagePath);
 
     // Validate input
     if (!text || !text.trim()) {

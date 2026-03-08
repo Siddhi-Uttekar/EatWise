@@ -16,6 +16,8 @@ if (!process.env.DATABASE_URL) {
   process.exit(1);
 }
 
+console.log("🗄️ Database URL configured:", process.env.DATABASE_URL.substring(0, 50) + "...");
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {

@@ -59,7 +59,6 @@ export async function analyzeIngredients(text, userId, imagePath) {
     });
 
     console.log("✓ AI analysis received, parsing...");
-    const analysis = parseAnalysis(result.text);
 
     // Save to database
     await pool.query(

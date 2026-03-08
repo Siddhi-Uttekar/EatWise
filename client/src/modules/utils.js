@@ -9,6 +9,6 @@ export function getRiskColor(risk) {
 }
 
 export function getRiskEmoji(risk) {
-  const map = { safe: "Γ£à", moderate: "ΓÜá∩╕Å", risky: "Γ¥î" };
-  return map[risk] || "Γä╣∩╕Å";
+  const map = { safe: "✅", moderate: "⚠️", risky: "❌" };
+  return map[risk] || "❓";
 }

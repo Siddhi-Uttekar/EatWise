@@ -90,7 +90,7 @@ export default function Register() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  placeholder="ΓÇóΓÇóΓÇóΓÇóΓÇóΓÇóΓÇóΓÇó"
+                  placeholder="••••••••"
                   className="pl-12 h-12 text-lg border-2 focus:border-green-500 focus:ring-green-500"
                 />
               </div>

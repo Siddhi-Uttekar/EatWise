@@ -42,7 +42,7 @@ export async function analyzeIngredients(text, userId, imagePath) {
 
   try {
     console.log("📝 Analyzing ingredients for user:", userId);
-    
+
     if (!process.env.GROQ_API_KEY) {
       throw new Error("GROQ_API_KEY is not configured");
     }
@@ -69,7 +69,7 @@ export async function analyzeIngredients(text, userId, imagePath) {
   } catch (error) {
     console.error("❌ Analysis error:", error.message);
     console.error("Error details:", error);
-    
+
     // Don't silently fail - throw the error for proper handling
     throw new Error(`Analysis failed: ${error.message}`);
   }
@@ -130,4 +130,3 @@ function createFallbackAnalysis() {
     ]
   };
 }
-

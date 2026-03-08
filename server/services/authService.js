@@ -13,7 +13,7 @@ export const registerUser = async ({ name, email, password }) => {
 
   try {
     console.log("📝 Registering user:", email);
-    
+
     const existingUser = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
     if (existingUser.rows.length > 0) {
       const error = new Error("User with this email already exists");
@@ -33,7 +33,7 @@ export const registerUser = async ({ name, email, password }) => {
   } catch (err) {
     console.error("❌ Registration error:", err.message);
     console.error("Error code:", err.code);
-    
+
     // Rethrow with more context
     if (err.statusCode) throw err;
     const error = new Error(err.message || "Registration failed");

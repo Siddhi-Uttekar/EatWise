@@ -10,7 +10,7 @@ export const protect = (req, res, next) => {
 
     // Extract token
     const token = req.headers.authorization.split(" ")[1];
-    
+
     if (!token) {
       console.log("❌ Token is empty");
       return res.status(401).json({ error: "Not authorized, no token" });

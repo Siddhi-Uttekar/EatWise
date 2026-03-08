@@ -3,23 +3,35 @@
 // Helper to get auth headers
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("No authentication token found. Please log in.");
+  }
   return {
     Authorization: `Bearer ${token}`,
   };
+};
+
+const handleErrorResponse = async (res) => {
+  try {
+    const err = await res.json();
+    return err.error || err.message || `Error: ${res.status}`;
+  } catch {
+    return `Server error: ${res.status} ${res.statusText}`;
+  }
 };
 
 export async function extractText(file) {
   const formData = new FormData();
   formData.append("image", file);
 
-  const res = await fetch(`${API_BASE}/ocr/extract`, {
+  const res = await fetch(`${API_BASE}/api/ocr/extract`, {
     method: "POST",
     body: formData,
   });
 
   if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error || "Failed to extract text");
+    const errMsg = await handleErrorResponse(res);
+    throw new Error(errMsg);
   }
 
   return res.json();
@@ -28,32 +40,33 @@ export async function extractText(file) {
 export async function analyzeIngredients(text, file) {
   const formData = new FormData();
   formData.append("text", text);
-  formData.append("image", file);
+  if (file) {
+    formData.append("image", file);
+  }
 
-  const res = await fetch(`${API_BASE}/analysis/analyze`, {
+  const res = await fetch(`${API_BASE}/api/analysis/analyze`, {
     method: "POST",
-    headers: { ...getAuthHeaders() }, // Add token here
+    headers: getAuthHeaders(),
     body: formData,
   });
 
   if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error || "Analysis failed");
+    const errMsg = await handleErrorResponse(res);
+    throw new Error(errMsg);
   }
 
   return res.json();
 }
 
 export async function getAnalysisHistory() {
-  const res = await fetch(`${API_BASE}/analysis/history`, {
-    headers: getAuthHeaders(), // Add token here
+  const res = await fetch(`${API_BASE}/api/analysis/history`, {
+    headers: getAuthHeaders(),
   });
 
   if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error || "Failed to fetch history");
+    const errMsg = await handleErrorResponse(res);
+    throw new Error(errMsg);
   }
 
   return res.json();
 }
-

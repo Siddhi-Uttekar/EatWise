@@ -6,11 +6,16 @@ const router = express.Router();
 router.post("/register", async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: "Name, email, and password are required" });
-    }
     const user = await registerUser({ name, email, password });
-    res.status(201).json({ message: "User registered successfully", userId: user.id });
+    res.status(201).json({
+      message: "User registered successfully",
+      userId: user.id,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email
+      }
+    });
   } catch (error) {
     next(error);
   }
@@ -19,11 +24,12 @@ router.post("/register", async (req, res, next) => {
 router.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
-    }
     const { token, userId } = await loginUser({ email, password });
-    res.status(200).json({ token, userId });
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      userId
+    });
   } catch (error) {
     next(error);
   }

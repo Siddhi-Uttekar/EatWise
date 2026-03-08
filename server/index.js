@@ -7,6 +7,7 @@ import ocrRoutes from "./routes/ocr.js";
 import analysisRoutes from "./routes/analysis.js";
 import authRoutes from "./routes/auth.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import pool from "./utils/db.js";
 
 // Load environment variables
 dotenv.config();
@@ -16,6 +17,50 @@ const __dirname = path.dirname(__filename);
 
 const app = express()
 const PORT = process.env.PORT || 5000
+
+// Initialize database tables
+const initializeDatabase = async () => {
+  try {
+    // Users table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        password_hash VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    // Analysis reports table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analysis_reports (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id),
+        report_data JSONB,
+        image_path VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    console.log("✓ Database tables initialized");
+  } catch (err) {
+    console.error("✗ Error initializing database:", err.message);
+  }
+};
+
+// Initialize database before starting server
+await initializeDatabase();
+
+// Verify database connection
+try {
+  const result = await pool.query('SELECT NOW()');
+  console.log("✓ Database connection verified");
+} catch (err) {
+  console.error("✗ Failed to connect to database:", err.message);
+  console.error("DATABASE_URL:", process.env.DATABASE_URL ? "Set" : "Not set");
+  process.exit(1);
+}
 
 // Middleware setup
 app.use(cors()); // Enable cross-origin requests

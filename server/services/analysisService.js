@@ -35,10 +35,18 @@ export async function analyzeIngredients(text, userId, imagePath) {
   const cleanText = text.replace(/\s+/g, " ").trim();
 
   if (cleanText.length < 5) {
-    throw new Error("Text too short to analyze");
+    const error = new Error("Text too short to analyze");
+    error.statusCode = 400;
+    throw error;
   }
 
   try {
+    console.log("📝 Analyzing ingredients for user:", userId);
+    
+    if (!process.env.GROQ_API_KEY) {
+      throw new Error("GROQ_API_KEY is not configured");
+    }
+
     const result = await generateText({
       model: groq("llama-3.1-8b-instant"),
       messages: [{
@@ -47,19 +55,23 @@ export async function analyzeIngredients(text, userId, imagePath) {
       }],
     });
 
-    console.log("AI raw response:", result.text); // Γ£à Log AI response
-
+    console.log("✓ AI analysis received, parsing...");
     const analysis = parseAnalysis(result.text);
 
+    // Save to database
     await pool.query(
       "INSERT INTO analysis_reports (user_id, report_data, image_path) VALUES ($1, $2, $3)",
       [userId, JSON.stringify(analysis), imagePath]
     );
 
+    console.log("✓ Analysis saved successfully");
     return analysis;
   } catch (error) {
-    console.error("Analysis failed:", error);
-    return createFallbackAnalysis();
+    console.error("❌ Analysis error:", error.message);
+    console.error("Error details:", error);
+    
+    // Don't silently fail - throw the error for proper handling
+    throw new Error(`Analysis failed: ${error.message}`);
   }
 }
 

@@ -26,11 +26,19 @@ const upload = multer({ storage });
 router.post("/analyze", protect, upload.single("image"), async (req, res, next) => {
   try {
     const { text } = req.body;
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : null; // Get file path if uploaded
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+
+    console.log("📥 Analysis request from user:", req.userId);
+    console.log("📄 Text length:", text?.length || 0);
+    console.log("🖼️ Image uploaded:", !!imagePath);
 
     // Validate input
-    if (!text?.trim()) {
-      return res.status(400).json({ error: "No text provided" });
+    if (!text || !text.trim()) {
+      return res.status(400).json({ error: "No text provided for analysis" });
+    }
+
+    if (text.trim().length < 5) {
+      return res.status(400).json({ error: "Text too short. Please provide ingredient list." });
     }
 
     // Analyze ingredients using AI service
@@ -40,6 +48,7 @@ router.post("/analyze", protect, upload.single("image"), async (req, res, next) 
     res.json(analysis);
   } catch (error) {
     // Pass error to error handler middleware
+    console.error("❌ Route error:", error.message);
     next(error);
   }
 });
